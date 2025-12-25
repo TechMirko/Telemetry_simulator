@@ -70,7 +70,7 @@ The system simulates a vehicle's data acquisition unit. It generates sensor data
 
 **Shared Memory**: Threads write to the ```telemetry_monitor struct``` in RAM.
 
-**Transmitter Process**: Wakes up when data is available, reads the packet, converts it to JSON ({"val": ..., "ts": ...}), and publishes it to ```fsae/car/RPM``` or ```fsae/car/TEMP```.
+**Transmitter Process**: Wakes up when data is available, reads the packet, converts it to JSON (```{"val": ..., "ts": ...}```), and publishes it to ```fsae/car/RPM``` or ```fsae/car/TEMP```.
 
 **Python Subscriber**: Receives the payload and prints it.
 

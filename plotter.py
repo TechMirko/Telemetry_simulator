@@ -1,4 +1,12 @@
 import paho.mqtt.client as mqtt
+import json
+
+import matplotlib
+matplotlib.use('TkAgg') # Forza l'uso di finestre interattive
+import matplotlib.pyplot as plt
+
+rpms = []
+temps = []
 
 # Connection callback function
 def onConnect(client, userData, flags, rc, properties):
@@ -13,6 +21,11 @@ def onMessageReceived(client, userData, msg):
     try:
         # Decodifica il payload
         payloadString = msg.payload.decode('utf-8')
+        dati = json.loads(payloadString)
+        if "RPM" in msg.topic:
+            rpms.append(dati['val'])
+        else:
+            temps.append(dati['val'])
         print(f"TOPIC: {msg.topic} | PAYLOAD: {payloadString}")
     except Exception as e:
         print(f"[ERROR] Decoding payload: {e}")
@@ -32,3 +45,20 @@ try:
 except KeyboardInterrupt:
     print("\n[PYTHON] Disconnecting...")
     client.disconnect()
+
+print(f"RPM: {rpms}")
+print(f"TEMPS: {temps}")
+
+plt.plot(rpms, color='black')
+plt.title("Andamento RPM nel giro")
+plt.grid()
+plt.xlabel("Tempo nel giro")
+plt.ylabel("RPM")
+plt.show()
+
+plt.plot(temps, color='orange')
+plt.title("Andamento temperatura motore nel giro")
+plt.grid()
+plt.xlabel("Tempo nel giro")
+plt.ylabel("°C")
+plt.show()
